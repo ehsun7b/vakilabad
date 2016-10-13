@@ -1,5 +1,6 @@
 package edu.mfldclin.mcrf.vakilabad.gui;
 
+import edu.mfldclin.mcrf.vakilabad.common.gui.CommonFrame;
 import org.springframework.stereotype.Component;
 
 /**
@@ -7,13 +8,14 @@ import org.springframework.stereotype.Component;
  * @author Ehsun Behravesh <post@ehsunbehravesh.com>
  */
 @Component
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends CommonFrame {
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        goToCenterOfScreen();
     }
 
     /**
