@@ -17,9 +17,7 @@ public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
-        //ApplicationContext ctx = SpringApplication.run(Application.class, args);
-
+    public static void main(String[] args) {        
         ConfigurableApplicationContext context = new SpringApplicationBuilder(Application.class).headless(false).run(args);
         MainFrame appFrame = context.getBean(MainFrame.class);
         appFrame.setVisible(true);
