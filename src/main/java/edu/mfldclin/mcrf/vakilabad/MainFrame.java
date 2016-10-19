@@ -1,12 +1,18 @@
-package edu.mfldclin.mcrf.vakilabad.gui;
+package edu.mfldclin.mcrf.vakilabad;
 
 import edu.mfldclin.mcrf.vakilabad.common.gui.CommonFrame;
+import edu.mfldclin.mcrf.vakilabad.log.LogFrame;
 import edu.mfldclin.mcrf.vakilabad.log.LogRecord;
 import edu.mfldclin.mcrf.vakilabad.log.LogService;
+import java.awt.Color;
 import java.time.LocalTime;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -37,6 +43,12 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
      * Creates new form MainFrame
      */
     public MainFrame() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            log.warn("Setting look and feel failed!", ex);
+        }
+        
         initComponents();
         goToCenterOfScreen();
         testLogService();
@@ -99,10 +111,7 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        LogFrame lf2 = new LogFrame();
-        AutowireCapableBeanFactory factory = context.getAutowireCapableBeanFactory();
-        factory.autowireBean(lf2);
-        factory.initializeBean(lf2, "LogFrame");
+        LogFrame lf2 = LogFrame.newInstance(context);
         lf2.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -112,10 +121,11 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     // End of variables declaration//GEN-END:variables
 
     private void testLogService() {
+        Random rnd = new Random(System.nanoTime());
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> {
-            logService.log(new LogRecord(LocalTime.now().toString()));
-        }, 1, 10, TimeUnit.SECONDS);
+            logService.log(LocalTime.now().toString(), rnd.nextBoolean() ? Color.BLUE : Color.PINK, rnd.nextBoolean(), rnd.nextBoolean());
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
