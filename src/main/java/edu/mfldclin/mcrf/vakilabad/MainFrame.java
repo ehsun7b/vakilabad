@@ -2,22 +2,23 @@ package edu.mfldclin.mcrf.vakilabad;
 
 import edu.mfldclin.mcrf.vakilabad.common.gui.CommonFrame;
 import edu.mfldclin.mcrf.vakilabad.log.LogFrame;
-import edu.mfldclin.mcrf.vakilabad.log.LogRecord;
 import edu.mfldclin.mcrf.vakilabad.log.LogService;
+import edu.mfldclin.mcrf.vakilabad.spark.SparkService;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.time.LocalTime;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -35,9 +36,14 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     private LogService logService;
 
     @Autowired
-    LogFrame lf;
+    private LogFrame lf;
+
+    @Autowired
+    private SparkService sparkService;
     
     private ApplicationContext context;
+
+    private Action actNewLogFrame;
 
     /**
      * Creates new form MainFrame
@@ -48,9 +54,10 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             log.warn("Setting look and feel failed!", ex);
         }
-        
+
         initComponents();
         goToCenterOfScreen();
+        createActions();
         testLogService();
     }
 
@@ -63,8 +70,15 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu1 = new javax.swing.JMenu();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jmiNewLogFrame = new javax.swing.JMenuItem();
+
+        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,6 +96,18 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
             }
         });
 
+        jMenu2.setText("File");
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Tools");
+
+        jmiNewLogFrame.setText("jMenuItem1");
+        jMenu3.add(jmiNewLogFrame);
+
+        jMenuBar1.add(jMenu3);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,17 +115,19 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
             .addGroup(layout.createSequentialGroup()
                 .addGap(115, 115, 115)
                 .addComponent(jButton1)
-                .addGap(26, 26, 26)
+                .addContainerGap(202, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(67, 67, 67))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(214, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addContainerGap(123, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(37, 37, 37)
+                .addComponent(jButton1)
                 .addGap(54, 54, 54))
         );
 
@@ -111,13 +139,17 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        LogFrame lf2 = LogFrame.newInstance(context);
-        lf2.setVisible(true);
+        //sparkService.getSparkContext();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jmiNewLogFrame;
     // End of variables declaration//GEN-END:variables
 
     private void testLogService() {
@@ -131,5 +163,18 @@ public class MainFrame extends CommonFrame implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
+    }
+
+    private void createActions() {
+        actNewLogFrame = new AbstractAction("NewLogFrame") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LogFrame lf2 = LogFrame.newInstance(context);
+                lf2.setVisible(true);
+            }   
+        };
+        
+        
+        jmiNewLogFrame.setAction(actNewLogFrame);
     }
 }
